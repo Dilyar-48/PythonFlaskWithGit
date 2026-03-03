@@ -1,6 +1,10 @@
-from flask import Flask, url_for, request
+from flask import Flask, url_for, request, redirect, session
+import os
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = './static/img'
+app.secret_key = 'supersecretkey'
 
 
 @app.route('/')
@@ -281,7 +285,7 @@ def choice(planet_name):
 
 @app.route('/results/<nickname>/<int:level>/<float:rating>')
 def results(nickname, level, rating):
-        return f'''<!doctype html>
+    return f'''<!doctype html>
                     <html lang="en">
                       <head>
                         <meta charset="utf-8">
@@ -304,6 +308,46 @@ def results(nickname, level, rating):
                         </div>
                       </body>
                     </html>'''
+
+
+@app.route('/load_photo', methods=['POST', 'GET'])
+def load_photo():
+    if request.method == 'GET':
+        return f'''<!doctype html>
+                               <html lang="en">
+                                 <head>
+                                   <meta charset="utf-8">
+                                   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+                                   <link rel="stylesheet"
+                                   href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css"
+                                   integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1"
+                                   crossorigin="anonymous">
+                                   <link rel="stylesheet" type="text/css" href="{url_for('static', filename='css/style.css')}" />
+                                   <title>Пример формы</title>
+                                 </head>
+                                 <body>
+                                   <h1 style='color: black;' align='center'>Загрузка фотографии</h1>
+                                   <h3 align='center'>Для участия в миссии</h3>
+                                   <div>
+                                       <form method="post" enctype="multipart/form-data" class="login_form">
+                                       <div class="form-group">
+                                            <label for="photo">Выберите файл</label>
+                                            <input type="file" class="form-control-file" id="photo" name="file">
+                                       </div>
+                                       <div class="form-group" style='padding: 7px 0px;'>
+                                            <img src="{url_for('static', filename='img/image.png')}" alt="здесь должна была быть картинка, но не нашлась", width='100%'>
+                                       </div>
+                                       <button type="submit" class="btn btn-primary">Записаться</button>
+                                       </form>
+                                   </div>
+                                 </body>
+                               </html>'''
+    elif request.method == 'POST':
+        image = request.files['file']
+        if image:
+            image.save(app.config['UPLOAD_FOLDER'] + "/image.png")
+        return redirect("/load_photo")
+
 
 if __name__ == '__main__':
     app.run(port=8080, host='127.0.0.1')
