@@ -67,6 +67,7 @@ def promotion_image():
                   </body>
                 </html>'''
 
+
 @app.route('/form_sample', methods=['POST', 'GET'])
 def form_sample():
     if request.method == 'GET':
@@ -188,6 +189,95 @@ def form_sample():
         print(request.form['file'])
         print(request.form['accept'])
         return "<h1 align='center'>Форма отправлена</h1>"
+
+
+@app.route('/choice/<string:planet_name>')
+def choice(planet_name):
+    to_planet_choice = {
+        "Марс": ["близка к Земле", "Марс известен как Красная планета",
+                 "На Марсе существуют огромные каньоны и вулканы",
+                 "Ученые обнаружили на Марсе следы воды в прошлом", "На Марсе есть ледяные шапки"],
+        "Юпитер": ["не сильно близка к Земле", "Юпитер — самая крупная планета Солнечной системы",
+                   "На Юпитере нет твёрдой поверхности",
+                   "Вокруг Юпитера вращаются 79 известных нам спутников",
+                   "Магнитное поле Юпитера — самое мощное в Солнечной системе"],
+        "Меркурий": ["самая близкая к Земле", "Его поверхность покрыта кратерами и напоминает Луну.",
+                     "На Меркурии практически нет атмосферы.",
+                     "День на Меркурии длится дольше, чем год.",
+                     "Температура на Меркурии может колебаться от очень высокой до экстремально низкой."],
+        "Венера": ["самая близкая к Земле", "Является второй планетой от Солнца и часто называется 'сестрой Земли'",
+                   "Поверхность Венеры покрыта густыми облаками из серной кислоты.",
+                   "Температура на поверхности достигает +470°C.",
+                   "День на Венере длится дольше, чем год."],
+        "Земля": ["единственная известная нам планета, на которой существует жизнь.",
+                  "Она вращается вокруг Солнца и имеет один естественный спутник - Луну.",
+                  "Поверхность Земли состоит из разнообразных ландшафтов.",
+                  "Наша планета обладает уникальной атмосферой.",
+                  "Земля является домом для миллионов видов живых существ."],
+        "Сатурн": ["шестая от Солнца и одна из самых ярких на ночном небе.",
+                   "Известна своими впечатляющими кольцами, которые состоят из льда и камня.",
+                   "Имеет множество спутников, среди которых выделяются Титан и Энцелад.",
+                   "На Сатурне дуют сильнейшие ветры, достигающие скорости до 1800 км/ч.",
+                   "Сатурн назван в честь римского бога сельского хозяйства."],
+        "Уран": ["седьмая по удалённости от Солнца.",
+                   "Имеет голубое свечение из-за метана в его атмосфере.",
+                   "Эта планета уникальна тем, что вращается «на боку».",
+                   "Уран был открыт в 1781 году английским астрономом Уильямом Гершелем.",
+                   "На Уране наблюдаются сильные ветры, дующие в направлении вращения планеты."],
+        "Нептун": ["восьмая от Солнца в нашей Солнечной системе.",
+                 "Он был открыт в 1846 году благодаря математическим расчётам.",
+                 "Имеет глубокий синий цвет, который ему придаёт метан в атмосфере.",
+                 "На Нептуне дуют самые сильные ветры в Солнечной системе, достигающие скорости до 2100 км/ч.",
+                 "Планета названа в честь римского бога морей ."]
+    }
+    if planet_name.capitalize() in to_planet_choice:
+        my_choice = to_planet_choice[planet_name.capitalize()]
+        return f'''<!doctype html>
+                    <html lang="en">
+                      <head>
+                        <meta charset="utf-8">
+                        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+                        <link rel="stylesheet"
+                        href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css"
+                        integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1"
+                        crossorigin="anonymous">
+                        <link rel="stylesheet" type="text/css" href="{url_for('static', filename='css/style.css')}" />
+                      </head>
+                      <body>
+                        <h1 style='color: black;'>Моё предложение - {planet_name.capitalize()}</h1>
+                        <h4>Эта планета {my_choice[0]}</h4>
+                        <div class="alert alert-primary" role="alert" style='color: green; background-color: #98FB98;'>
+                          {my_choice[1]}
+                        </div>
+                        <div class="alert alert-primary" role="alert" style='color: blue; background-color: #7FFFD4;'>
+                          {my_choice[2]}
+                        </div>
+                        <div class="alert alert-primary" role="alert" style='color: #BDB76B; background-color: #F0E68C;'>
+                          {my_choice[3]}
+                        </div>
+                        <div class="alert alert-primary" role="alert" style='color: #C71585; background-color: #FFB6C1;'>
+                          {my_choice[4]}
+                        </div>
+                      </body>
+                    </html>'''
+    else:
+        return f'''<!doctype html>
+                            <html lang="en">
+                              <head>
+                                <meta charset="utf-8">
+                                <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+                                <link rel="stylesheet"
+                                href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css"
+                                integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1"
+                                crossorigin="anonymous">
+                                <link rel="stylesheet" type="text/css" href="{url_for('static', filename='css/style.css')}" />
+                              </head>
+                              <body>
+                                <h1 style='color: black;'>Эта планета мне неизвестна!</h1>
+                                <h4>Попробуйте писать запрос корректно, русскими буквами!</h4>
+                              </body>
+                            </html>'''
+
 
 if __name__ == '__main__':
     app.run(port=8080, host='127.0.0.1')
