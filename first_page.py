@@ -220,15 +220,15 @@ def choice(planet_name):
                    "На Сатурне дуют сильнейшие ветры, достигающие скорости до 1800 км/ч.",
                    "Сатурн назван в честь римского бога сельского хозяйства."],
         "Уран": ["седьмая по удалённости от Солнца.",
-                   "Имеет голубое свечение из-за метана в его атмосфере.",
-                   "Эта планета уникальна тем, что вращается «на боку».",
-                   "Уран был открыт в 1781 году английским астрономом Уильямом Гершелем.",
-                   "На Уране наблюдаются сильные ветры, дующие в направлении вращения планеты."],
+                 "Имеет голубое свечение из-за метана в его атмосфере.",
+                 "Эта планета уникальна тем, что вращается «на боку».",
+                 "Уран был открыт в 1781 году английским астрономом Уильямом Гершелем.",
+                 "На Уране наблюдаются сильные ветры, дующие в направлении вращения планеты."],
         "Нептун": ["восьмая от Солнца в нашей Солнечной системе.",
-                 "Он был открыт в 1846 году благодаря математическим расчётам.",
-                 "Имеет глубокий синий цвет, который ему придаёт метан в атмосфере.",
-                 "На Нептуне дуют самые сильные ветры в Солнечной системе, достигающие скорости до 2100 км/ч.",
-                 "Планета названа в честь римского бога морей ."]
+                   "Он был открыт в 1846 году благодаря математическим расчётам.",
+                   "Имеет глубокий синий цвет, который ему придаёт метан в атмосфере.",
+                   "На Нептуне дуют самые сильные ветры в Солнечной системе, достигающие скорости до 2100 км/ч.",
+                   "Планета названа в честь римского бога морей ."]
     }
     if planet_name.capitalize() in to_planet_choice:
         my_choice = to_planet_choice[planet_name.capitalize()]
@@ -278,6 +278,32 @@ def choice(planet_name):
                               </body>
                             </html>'''
 
+
+@app.route('/results/<nickname>/<int:level>/<float:rating>')
+def results(nickname, level, rating):
+        return f'''<!doctype html>
+                    <html lang="en">
+                      <head>
+                        <meta charset="utf-8">
+                        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+                        <link rel="stylesheet"
+                        href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css"
+                        integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1"
+                        crossorigin="anonymous">
+                        <link rel="stylesheet" type="text/css" href="{url_for('static', filename='css/style.css')}" />
+                      </head>
+                      <body>
+                        <h1 style='color: black;'>Результаты отбора</h1>
+                        <h3>Претендента на участие в миссии {nickname}:</h3>
+                        <div class="alert alert-primary" role="alert" style='color: green; background-color: #98FB98;'>
+                          Поздравляем! Ваш рейтинг после {level} этапа отбора...
+                        </div>
+                        <h3>Составляет {rating}!</h3>
+                        <div class="alert alert-primary" role="alert" style='color: #BDB76B; background-color: #F0E68C;'>
+                          Желаем удачи!
+                        </div>
+                      </body>
+                    </html>'''
 
 if __name__ == '__main__':
     app.run(port=8080, host='127.0.0.1')
