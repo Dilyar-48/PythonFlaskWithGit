@@ -1,4 +1,4 @@
-from flask import Flask, url_for, request, redirect, session
+from flask import Flask, url_for, request, redirect, session, render_template
 import os
 from werkzeug.utils import secure_filename
 
@@ -8,13 +8,10 @@ app.secret_key = 'supersecretkey'
 
 
 @app.route('/')
-def page_first():
-    return "Миссия Колонизация Марса"
+@app.route('/index/<title>')
+def index(title):
+    return render_template('base.html', title=title)
 
-
-@app.route('/index')
-def index():
-    return "И на Марсе будут яблони цвести!"
 
 
 @app.route('/image_mars')
@@ -393,6 +390,8 @@ def carousel():
                             </div>
                         </body>
                     </html>'''
+
+
 
 if __name__ == '__main__':
     app.run(port=8080, host='127.0.0.1')
