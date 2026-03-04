@@ -7,11 +7,10 @@ app.config['UPLOAD_FOLDER'] = './static/img'
 app.secret_key = 'supersecretkey'
 
 
-@app.route('/')
+@app.route('/<title>')
 @app.route('/index/<title>')
 def index(title):
     return render_template('base.html', title=title)
-
 
 
 @app.route('/image_mars')
@@ -346,6 +345,7 @@ def load_photo():
             image.save(app.config['UPLOAD_FOLDER'] + "/image.png")
         return redirect("/load_photo")
 
+
 @app.route('/carousel')
 def carousel():
     return f'''<!doctype html>
@@ -391,13 +391,34 @@ def carousel():
                         </body>
                     </html>'''
 
+
 @app.route('/training/<string:prof>')
 def training(prof):
     return render_template('training.html', prof=prof.capitalize())
 
+
 @app.route('/list_prof/<list>')
 def list_prof(list):
     return render_template('list_temp.html', list=list)
+
+
+@app.route('/answer')
+@app.route('/auto_answer')
+def answer():
+    my_answer = {
+        "title": "Анкета",
+        "surname": "Замалиев",
+        "name": "Диляр",
+        "education": "Основное общее",
+        "profession": "Школьник",
+        "sex": "Мужской",
+        "motivation": "Всегда мечтал застрять на Марсе!",
+        "ready": "True",
+    }
+    return render_template('auto_answer.html', surname=my_answer["surname"], name=my_answer["name"],
+                           education=my_answer["education"], profession=my_answer["profession"], sex=my_answer["sex"],
+                           motivation=my_answer["motivation"], ready=my_answer["ready"])
+
 
 if __name__ == '__main__':
     app.run(port=8080, host='127.0.0.1')
