@@ -1,18 +1,41 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <form action="" method="post" novalidate>
-        <div>
-            {{ form.csrf_token }}
-        </div>
-        {% for field in form if field.name != 'csrf_token' %}
-            <div>
-                {{ field.label() }}
-                {{ field() }}
-                {% for error in field.errors %}
-                    <div class="error">{{ error }}</div>
-                {% endfor %}
+<h1 style="padding-left: 100px;"><img src="../../static/img/MARS-2-7.png" align="left">Аварийный доступ</h1>
+<form action="" method="post" novalidate>
+    {{ form.hidden_tag() }}
+    <p style="padding-left: 100px;">
+        ID астронавта<br>
+        {{ form.astronaut_id(class="form-control") }}<br>
+        {% for error in form.astronaut_id.errors %}
+    <div class="alert alert-danger" role="alert" style="padding-left: 100px;">
+        {{ error }}
+    </div>
+    {% endfor %}
+    <p style="padding-left: 100px;">
+        Пароль астронавта<br>
+        {{ form.astronaut_password(class="form-control", type="password") }}<br>
+        {% for error in form.astronaut_password.errors %}
+            <div class="alert alert-danger" role="alert" style="padding-left: 100px;">
+                {{ error }}
             </div>
-        {% endfor %}
-    </form>
+    {% endfor %}
+    <p style="padding-left: 100px;">
+        ID капитана<br>
+        {{ form.captain_id(class="form-control") }}<br>
+        {% for error in form.captain_id.errors %}
+    <div class="alert alert-danger" role="alert" style="padding-left: 100px;">
+        {{ error }}
+    </div>
+    {% endfor %}
+    <p style="padding-left: 100px;">
+        Пароль капитана<br>
+        {{ form.captain_password(class="form-control", type="password") }}<br>
+        {% for error in form.captain_password.errors %}
+    <div class="alert alert-danger" role="alert" style="padding-left: 100px;">
+        {{ error }}
+    </div>
+    {% endfor %}
+    <p style="padding-left: 100px;">{{ form.submit(type="submit", class="btn btn-primary") }}</p>
+</form>
 {% endblock %}

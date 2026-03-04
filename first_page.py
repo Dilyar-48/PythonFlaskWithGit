@@ -7,11 +7,14 @@ app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = './static/img'
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 
+
 class LoginForm(FlaskForm):
-    username = StringField('Логин', validators=[DataRequired()])
-    password = PasswordField('Пароль', validators=[DataRequired()])
-    remember_me = BooleanField('Запомнить меня')
+    astronaut_id = StringField('ID астронавта', validators=[DataRequired()])
+    astronaut_password = PasswordField('Пароль астронавта', validators=[DataRequired()])
+    captain_id = StringField('ID капитана', validators=[DataRequired()])
+    captain_password = PasswordField('Пароль капитана', validators=[DataRequired()])
     submit = SubmitField('Войти')
+
 
 @app.route('/<title>')
 @app.route('/index/<title>')
@@ -426,21 +429,28 @@ def answer():
                            motivation=my_answer["motivation"], ready=my_answer["ready"])
 
 
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    form = LoginForm()
-    if form.validate_on_submit():
-        return redirect('/success')
-    return render_template('login.html', title='Авторизация', form=form)
-
-
 @app.route('/distribution')
 def distribution():
     return render_template('cabins.html', user_list=["Ридли Скотт", "Энди Уир"])
 
+
 @app.route('/table/<sex>/<age>')
 def table(sex, age):
     return render_template('marsianins_table.html', sex=sex.lower(), age=int(age))
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    form = LoginForm()
+    if form.validate_on_submit():
+        return redirect('/true_answer_page')
+    return render_template('login.html', title='Авторизация', form=form)
+
+
+@app.route('/true_answer_page', methods=['GET', 'POST'])
+def true_answer_page():
+    return render_template('form_answer.html', title='Авторизация прошла успешно')
+
 
 if __name__ == '__main__':
     app.run(port=8080, host='127.0.0.1')
