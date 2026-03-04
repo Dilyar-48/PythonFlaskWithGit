@@ -438,6 +438,9 @@ def login():
 def distribution():
     return render_template('cabins.html', user_list=["Ридли Скотт", "Энди Уир"])
 
+@app.route('/table/<sex>/<age>')
+def table(sex, age):
+    return render_template('marsianins_table.html', sex=sex.lower(), age=int(age))
 
 if __name__ == '__main__':
     app.run(port=8080, host='127.0.0.1')
