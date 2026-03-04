@@ -1,11 +1,17 @@
 from flask import Flask, url_for, request, redirect, session, render_template
-import os
-from werkzeug.utils import secure_filename
+from flask_wtf import FlaskForm
+from wtforms import StringField, PasswordField, BooleanField, SubmitField
+from wtforms.validators import DataRequired
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = './static/img'
-app.secret_key = 'supersecretkey'
+app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 
+class LoginForm(FlaskForm):
+    username = StringField('Логин', validators=[DataRequired()])
+    password = PasswordField('Пароль', validators=[DataRequired()])
+    remember_me = BooleanField('Запомнить меня')
+    submit = SubmitField('Войти')
 
 @app.route('/<title>')
 @app.route('/index/<title>')
@@ -418,6 +424,19 @@ def answer():
     return render_template('auto_answer.html', surname=my_answer["surname"], name=my_answer["name"],
                            education=my_answer["education"], profession=my_answer["profession"], sex=my_answer["sex"],
                            motivation=my_answer["motivation"], ready=my_answer["ready"])
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    form = LoginForm()
+    if form.validate_on_submit():
+        return redirect('/success')
+    return render_template('login.html', title='Авторизация', form=form)
+
+
+@app.route('/distribution')
+def distribution():
+    return render_template('cabins.html', user_list=["Ридли Скотт", "Энди Уир"])
 
 
 if __name__ == '__main__':
