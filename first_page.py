@@ -5,8 +5,11 @@ from wtforms.validators import DataRequired
 import json
 
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = './static/img'
+app.config['UPLOAD_FOLDER'] = '../static/img/'
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
+LIST_OF_PICTURES_TO_GALERY = ["../static/img/slide1.png", "../static/img/slide2.png",
+                              "../static/img/slide3.png", "../static/img/slide4.png",
+                              "../static/img/slide5.png"]
 
 
 class LoginForm(FlaskForm):
@@ -452,6 +455,7 @@ def login():
 def true_answer_page():
     return render_template('form_answer.html', title='Авторизация прошла успешно')
 
+
 @app.route('/member')
 def member():
     with open("templates/peoples.json", "rt", encoding="utf8") as f:
@@ -460,6 +464,18 @@ def member():
             i['prof'] = ", ".join(sorted(i['prof']))
     return render_template('member_page.html', peoples=news_list)
 
+
+@app.route('/galery', methods=['POST', 'GET'])
+def galery():
+    if request.method == 'GET':
+        return render_template('galery_page.html', pictures=LIST_OF_PICTURES_TO_GALERY)
+    elif request.method == 'POST':
+        image = request.files['file']
+        name = image.filename
+        if image:
+            image.save(app.config['UPLOAD_FOLDER'].lstrip("../") + name)
+            LIST_OF_PICTURES_TO_GALERY.append(app.config['UPLOAD_FOLDER'] + name)
+        return redirect("/galery")
 
 if __name__ == '__main__':
     app.run(port=8080, host='127.0.0.1')
