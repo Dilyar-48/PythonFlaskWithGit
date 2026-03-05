@@ -345,7 +345,7 @@ def load_photo():
     elif request.method == 'POST':
         image = request.files['file']
         if image:
-            image.save(app.config['UPLOAD_FOLDER'] + "/image.png")
+            image.save(app.config['UPLOAD_FOLDER'].lstrip("../") + "/image.png")
         return redirect("/load_photo")
 
 
