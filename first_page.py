@@ -1,7 +1,5 @@
-from flask import Flask, url_for, request, redirect, session, render_template
-from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField
-from wtforms.validators import DataRequired
+from flask import Flask, url_for, request, redirect, render_template
+from loginform import LoginForm
 import json
 
 app = Flask(__name__)
@@ -10,14 +8,6 @@ app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 LIST_OF_PICTURES_TO_GALERY = ["../static/img/slide1.png", "../static/img/slide2.png",
                               "../static/img/slide3.png", "../static/img/slide4.png",
                               "../static/img/slide5.png"]
-
-
-class LoginForm(FlaskForm):
-    astronaut_id = StringField('ID астронавта', validators=[DataRequired()])
-    astronaut_password = PasswordField('Пароль астронавта', validators=[DataRequired()])
-    captain_id = StringField('ID капитана', validators=[DataRequired()])
-    captain_password = PasswordField('Пароль капитана', validators=[DataRequired()])
-    submit = SubmitField('Войти')
 
 
 @app.route('/<title>')
