@@ -1,17 +1,13 @@
 {% extends "base.html" %}
 
 {% block content %}
-     {% if prof == "Инженер" %}
+     {% if prof == "Инженер" or prof == "Строитель"%}
         <div class="form-group" align='center'>
             <h2>Инженерные тренажеры</h2>
             <img src=../static/img/cosmo_place_it.png alt="Инженерные тренажеры" width=800 align='center'></div>
-     {% elif prof == "Строитель"%}
+     {% else %}
         <div class="form-group" align='center'>
             <h2>Научные симуляторы</h2>
             <img src=../static/img/cosmo_place_ns.png alt="Научные симуляторы" width=800 align='center'></div>
-     {% else %}
-        <div class="form-group" align='center'>
-            <h2>Прочие тренажёры</h2>
-            <img src=../static/img/cosmo_place.png alt="Другие проффессии" width=800 align='center'></div>
      {% endif %}
 {% endblock %}
