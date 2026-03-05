@@ -418,7 +418,7 @@ def answer():
         "motivation": "Всегда мечтал застрять на Марсе!",
         "ready": "True",
     }
-    return render_template('auto_answer.html', surname=my_answer["surname"], name=my_answer["name"],
+    return render_template('auto_answer.html', title=my_answer["title"], surname=my_answer["surname"], name=my_answer["name"],
                            education=my_answer["education"], profession=my_answer["profession"], sex=my_answer["sex"],
                            motivation=my_answer["motivation"], ready=my_answer["ready"])
 
