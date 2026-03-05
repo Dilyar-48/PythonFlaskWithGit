@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 
 {% block content %}
-        <h2 style="padding-left: 140px;">Размещение по каютам</h2>
+        <h2 style="padding-left: 40px;">Размещение по каютам</h2>
         {% set a = "Каюта №" %}
         {% for user in user_list %}
-            <h5 style="padding-left: 100px;">{{ user }} - {{a}}{{ loop.index }} {% if loop.first %} - капитан корабля{% endif %}</h5>
+            <h5>{{ user }} - {{a}}{{ loop.index }} {% if loop.first %} - капитан корабля{% endif %}</h5>
         {% endfor %}
 {% endblock %}

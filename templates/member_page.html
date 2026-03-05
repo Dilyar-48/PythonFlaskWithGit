@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+        {% set information = peoples['peoples'] | random %}
+        <div style="width: 600px; text-align: center;">
+            <h2>{{information['name']}}</h2>
+            <img src={{information['image']}} alt='Изображение' width="400px">
+            <h5>{{information['prof']}}</h5>
+        </div>
+{% endblock %}

@@ -2,6 +2,7 @@ from flask import Flask, url_for, request, redirect, session, render_template
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import DataRequired
+import json
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = './static/img'
@@ -447,9 +448,17 @@ def login():
     return render_template('login.html', title='Авторизация', form=form)
 
 
-@app.route('/true_answer_page', methods=['GET', 'POST'])
+@app.route('/true_answer_page')
 def true_answer_page():
     return render_template('form_answer.html', title='Авторизация прошла успешно')
+
+@app.route('/member')
+def member():
+    with open("templates/peoples.json", "rt", encoding="utf8") as f:
+        news_list = json.loads(f.read())
+        for i in news_list['peoples']:
+            i['prof'] = ", ".join(sorted(i['prof']))
+    return render_template('member_page.html', peoples=news_list)
 
 
 if __name__ == '__main__':

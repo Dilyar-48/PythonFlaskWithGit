@@ -1,41 +1,41 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1 style="padding-left: 100px;"><img src="../../static/img/MARS-2-7.png" align="left">Аварийный доступ</h1>
+<h1><img src="../../static/img/MARS-2-7.png" align="left">Аварийный доступ</h1>
 <form action="" method="post" novalidate>
     {{ form.hidden_tag() }}
-    <p style="padding-left: 100px;">
+    <p>
         ID астронавта<br>
         {{ form.astronaut_id(class="form-control") }}<br>
         {% for error in form.astronaut_id.errors %}
-    <div class="alert alert-danger" role="alert" style="padding-left: 100px;">
+    <div class="alert alert-danger" role="alert">
         {{ error }}
     </div>
     {% endfor %}
-    <p style="padding-left: 100px;">
+    <p>
         Пароль астронавта<br>
         {{ form.astronaut_password(class="form-control", type="password") }}<br>
         {% for error in form.astronaut_password.errors %}
-            <div class="alert alert-danger" role="alert" style="padding-left: 100px;">
+            <div class="alert alert-danger" role="alert">
                 {{ error }}
             </div>
     {% endfor %}
-    <p style="padding-left: 100px;">
+    <p>
         ID капитана<br>
         {{ form.captain_id(class="form-control") }}<br>
         {% for error in form.captain_id.errors %}
-    <div class="alert alert-danger" role="alert" style="padding-left: 100px;">
+    <div class="alert alert-danger" role="alert">
         {{ error }}
     </div>
     {% endfor %}
-    <p style="padding-left: 100px;">
+    <p>
         Пароль капитана<br>
         {{ form.captain_password(class="form-control", type="password") }}<br>
         {% for error in form.captain_password.errors %}
-    <div class="alert alert-danger" role="alert" style="padding-left: 100px;">
+    <div class="alert alert-danger" role="alert">
         {{ error }}
     </div>
     {% endfor %}
-    <p style="padding-left: 100px;">{{ form.submit(type="submit", class="btn btn-primary") }}</p>
+    <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
 </form>
 {% endblock %}
