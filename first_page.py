@@ -1,5 +1,7 @@
-from flask import Flask, url_for, request, redirect, render_template
-from loginform import LoginForm
+from flask import Flask, url_for, request, redirect, session, render_template
+from flask_wtf import FlaskForm
+from wtforms import StringField, PasswordField, BooleanField, SubmitField
+from wtforms.validators import DataRequired
 import json
 
 app = Flask(__name__)
@@ -8,6 +10,14 @@ app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 LIST_OF_PICTURES_TO_GALERY = ["../static/img/slide1.png", "../static/img/slide2.png",
                               "../static/img/slide3.png", "../static/img/slide4.png",
                               "../static/img/slide5.png"]
+
+
+class LoginForm(FlaskForm):
+    astronaut_id = StringField('ID астронавта', validators=[DataRequired()])
+    astronaut_password = PasswordField('Пароль астронавта', validators=[DataRequired()])
+    captain_id = StringField('ID капитана', validators=[DataRequired()])
+    captain_password = PasswordField('Пароль капитана', validators=[DataRequired()])
+    submit = SubmitField('Войти')
 
 
 @app.route('/<title>')
@@ -418,7 +428,7 @@ def answer():
         "motivation": "Всегда мечтал застрять на Марсе!",
         "ready": "True",
     }
-    return render_template('auto_answer.html', title=my_answer["title"], surname=my_answer["surname"], name=my_answer["name"],
+    return render_template('auto_answer.html', surname=my_answer["surname"], name=my_answer["name"],
                            education=my_answer["education"], profession=my_answer["profession"], sex=my_answer["sex"],
                            motivation=my_answer["motivation"], ready=my_answer["ready"])
 
