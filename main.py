@@ -4,6 +4,7 @@ from forms.loginform import LoginForm
 from forms.user import RegisterForm
 from data import db_session
 from data.users import User
+from data.jobs import Jobs
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = '../static/img/'
@@ -512,6 +513,13 @@ def main():
         user.address = f"module{us + 1}"
         user.email = emails[us]
         session.add(user)
+    jb = Jobs()
+    jb.team_leader = 1
+    jb.job = "deployment of residential modules 1 and 2"
+    jb.work_size = 15
+    jb.collaborators = "2, 3"
+    jb.is_finished = False
+    session.add(jb)
     session.commit()
     app.run(port=8080, host='127.0.0.1')
 
