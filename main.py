@@ -471,57 +471,8 @@ def galery():
             LIST_OF_PICTURES_TO_GALERY.append(app.config['UPLOAD_FOLDER'] + name)
         return redirect("/galery")
 
-@app.route('/register', methods=['GET', 'POST'])
-def reqister():
-    form = RegisterForm()
-    if form.validate_on_submit():
-        if form.password.data != form.password_again.data:
-            return render_template('register.html', title='Регистрация',
-                                   form=form,
-                                   message="Пароли не совпадают")
-        db_sess = db_session.create_session()
-        if db_sess.query(User).filter(User.email == form.email.data).first():
-            return render_template('register.html', title='Регистрация',
-                                   form=form,
-                                   message="Такой пользователь уже есть")
-        user = User(
-            name=form.name.data,
-            email=form.email.data
-        )
-        user.set_password(form.password.data)
-        db_sess.add(user)
-        db_sess.commit()
-        return redirect('/true_answer_page')
-    return render_template('register.html', title='Регистрация', form=form)
 
-def main():
-    db_session.global_init("db/mars_explorer.db")
-    session = db_session.create_session()
-    names = ["Ridley", "James", "Yuriy"]
-    surnames = ["Scott", "Cameron", "Gagarin"]
-    ages = [21, 42, 27]
-    positions = ["captain", "colonist", "colonist"]
-    specialites = ["research engineer", "pilot", "pilot"]
-    emails = ["scott_chief@mars.org", "jamesCameron@mars.org", "GagarinYura@mars.org"]
-    for us in range(len(names)):
-        user = User()
-        user.surname = surnames[us]
-        user.name = names[us]
-        user.age = ages[us]
-        user.position = positions[us]
-        user.speciality = specialites[us]
-        user.address = f"module{us + 1}"
-        user.email = emails[us]
-        session.add(user)
-    jb = Jobs()
-    jb.team_leader = 1
-    jb.job = "deployment of residential modules 1 and 2"
-    jb.work_size = 15
-    jb.collaborators = "2, 3"
-    jb.is_finished = False
-    session.add(jb)
-    session.commit()
-    app.run(port=8080, host='127.0.0.1')
+
 
 if __name__ == '__main__':
-    main()
+    app.run(port=8080, host='127.0.0.1')

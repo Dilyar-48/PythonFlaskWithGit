@@ -20,7 +20,7 @@ class User(SqlAlchemyBase):
     hashed_password = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     modified_date = sqlalchemy.Column(sqlalchemy.DateTime,
                                       default=datetime.datetime.now)
-    jobs = sqlalchemy.orm.relationship("Jobs", back_populates='user')
+    job = sqlalchemy.orm.relationship("Jobs", back_populates="team_leader")
 
     def set_password(self, password):
         self.hashed_password = generate_password_hash(password)
