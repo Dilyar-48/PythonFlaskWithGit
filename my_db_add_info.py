@@ -8,6 +8,7 @@ def add_new_info():
     session = db_session.create_session()
     session.query(User).delete()
     session.query(Jobs).delete()
+    session.query(Department).delete()
     session.commit()
     names = ["Ridley", "James", "Yuriy", "Sergey"]
     surnames = ["Scott", "Cameron", "Gagarin", "Petkin"]
