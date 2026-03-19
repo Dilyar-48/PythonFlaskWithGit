@@ -6,9 +6,7 @@ from data.departament import Department
 def add_new_info():
     db_session.global_init("db/mars_explorer.db")
     session = db_session.create_session()
-    session.query(User).delete()
     session.query(Jobs).delete()
-    session.query(Department).delete()
     session.commit()
     names = ["Ridley", "James", "Yuriy", "Sergey"]
     surnames = ["Scott", "Cameron", "Gagarin", "Petkin"]
@@ -16,16 +14,18 @@ def add_new_info():
     positions = ["captain", "colonist", "colonist", "colonist"]
     specialites = ["research engineer", "pilot", "pilot", "research engineer"]
     emails = ["scott_chief@mars.org", "jamesCameron@mars.org", "GagarinYura@mars.org", "SergPet@mars.org"]
+    emails_was = [us.email for us in session.query(User).all()]
     for us in range(len(names)):
-        user = User()
-        user.surname = surnames[us]
-        user.name = names[us]
-        user.age = ages[us]
-        user.position = positions[us]
-        user.speciality = specialites[us]
-        user.address = f"module{us + 1}"
-        user.email = emails[us]
-        session.add(user)
+        if emails[us] not in emails_was:
+            user = User()
+            user.surname = surnames[us]
+            user.name = names[us]
+            user.age = ages[us]
+            user.position = positions[us]
+            user.speciality = specialites[us]
+            user.address = f"module{us + 1}"
+            user.email = emails[us]
+            session.add(user)
     leaders = [1, 2, 3]
     jobs = ["deployment of residential modules 1 and 2", "Patch up the crack in the ship", "Get enough sleep"]
     work_sizes = [15, 35, 10]
@@ -43,11 +43,13 @@ def add_new_info():
     collabs = ["2, 3", "1"]
     chiefs = [2, 1]
     emails = ["dep1@mars.org", "dep2@mars.org"]
+    emails_was = [dep.email for dep in session.query(Department).all()]
     for dep in range(len(chiefs)):
-        depart = Department()
-        depart.title = titles[dep]
-        depart.members = collabs[dep]
-        depart.email = emails[dep]
-        depart.chief = chiefs[dep]
-        session.add(depart)
+        if emails[dep] not in emails_was:
+            depart = Department()
+            depart.title = titles[dep]
+            depart.members = collabs[dep]
+            depart.email = emails[dep]
+            depart.chief = chiefs[dep]
+            session.add(depart)
     session.commit()
