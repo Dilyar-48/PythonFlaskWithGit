@@ -1,6 +1,7 @@
 from data import db_session
 from data.users import User
 from data.jobs import Jobs
+from data.departament import Department
 
 def add_new_info():
     db_session.global_init("db/mars_explorer.db")
@@ -37,4 +38,15 @@ def add_new_info():
         jb.collaborators = collabs[j]
         jb.is_finished = finished[j]
         session.add(jb)
+    titles = ["dep1", "dep2"]
+    collabs = ["2, 3", "1"]
+    chiefs = [2, 1]
+    emails = ["dep1@mars.org", "dep2@mars.org"]
+    for dep in range(len(chiefs)):
+        depart = Department()
+        depart.title = titles[dep]
+        depart.members = collabs[dep]
+        depart.email = emails[dep]
+        depart.chief = chiefs[dep]
+        session.add(depart)
     session.commit()
