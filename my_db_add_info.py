@@ -28,9 +28,9 @@ def add_new_info():
         session.add(user)
     leaders = [1, 2, 3]
     jobs = ["deployment of residential modules 1 and 2", "Patch up the crack in the ship", "Get enough sleep"]
-    work_sizes = [15, 10, 10]
+    work_sizes = [15, 35, 10]
     collabs = ["2, 3", "1, 2", "One in a team"]
-    finished = [False, False, True]
+    finished = [False, True, True]
     for j in range(len(leaders)):
         jb = Jobs()
         jb.team_leader = leaders[j]

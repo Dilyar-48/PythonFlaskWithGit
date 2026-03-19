@@ -8,12 +8,20 @@
     <link rel="stylesheet" type="text/css" href="../../static/css/style_to_second_page.css" />
 </head>
     <body>
-        <div class="alert alert-primary" align='center' role="alert" style='color: black; background-color: MintCream; border: 1px solid MintCream; border-radius: 50px; clear: both; height: 85px;' >
-            <h1 style="float: left">Миссия Колонизация Марса</h1>
-            <h6 style="float: right">Mars One</h6>
+        <div class="alert alert-primary" role="alert" style='color: black; background-color: MintCream; border: 1px solid MintCream; border-radius: 50px; clear: both; height: 85px; display: flex;' >
+            <h1 style="width: 50%;">Миссия Колонизация Марса</h1>
+            {% if current_user.is_authenticated %}
+                <a class="navbar-brand" href="/logout" style="color: #000; width: 35%;">{{ current_user.name }}</a>
+            {% else %}
+                <p style="width: 35%;">
+                    <a class="btn btn-primary " href="/register">Зарегистрироваться</a>
+                    <a class="btn btn-success" href="/login">Войти</a>
+                </p>
+            {% endif %}
+                <h6 align="right" style="float: left; width: 15%;">Mars One</h6>
         </div>
         <h4>И на Марсе будут яблони цвести!</h4>
-        <main role="main" class="container" style="position: absolute; left: 100px;">
+        <main role="main" class="container" style="margin-left: auto; margin-right: auto">
         {% block content %}{% endblock %}
         </main>
     </body>
