@@ -3,6 +3,7 @@ from data import db_session
 from data.users import User
 from data.jobs import Jobs
 from forms.user import RegisterForm
+from my_db_add_info import add_new_info
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
@@ -51,38 +52,6 @@ def index():
     return render_template("index.html", news=news)
 
 
-def main():
-    db_session.global_init("db/mars_explorer.db")
-    session = db_session.create_session()
-    names = ["Ridley", "James", "Yuriy", "Sergey"]
-    surnames = ["Scott", "Cameron", "Gagarin", "Petkin"]
-    ages = [21, 42, 27, 67]
-    positions = ["captain", "colonist", "colonist", "colonist"]
-    specialites = ["research engineer", "pilot", "pilot", "research engineer"]
-    emails = ["scott_chief@mars.org", "jamesCameron@mars.org", "GagarinYura@mars.org", "SergPet@mars.org"]
-    for us in range(len(names)):
-        if not session.query(User).filter(User.email == emails[us]).first():
-            user = User()
-            user.surname = surnames[us]
-            user.name = names[us]
-            user.age = ages[us]
-            user.position = positions[us]
-            user.speciality = specialites[us]
-            user.address = f"module{us + 1}"
-            user.email = emails[us]
-            session.add(user)
-    jb = Jobs()
-    jb.user = 1
-    jb.job = "deployment of residential modules 1 and 2"
-    jb.work_size = 15
-    jb.collaborators = "2, 3"
-    jb.is_finished = False
-    if not session.query(Jobs).filter(Jobs.team_leader == jb.team_leader, Jobs.job == jb.job,
-                                      Jobs.work_size == jb.work_size, Jobs.collaborators == jb.collaborators).first():
-        session.add(jb)
-    session.commit()
-
-
 if __name__ == '__main__':
-    main()
+    add_new_info()
     app.run(port=5000, host='127.0.0.1')

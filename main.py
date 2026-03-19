@@ -1,10 +1,7 @@
 from flask import Flask, url_for, request, redirect, session, render_template
 import json
 from forms.loginform import LoginForm
-from forms.user import RegisterForm
-from data import db_session
-from data.users import User
-from data.jobs import Jobs
+
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = '../static/img/'
