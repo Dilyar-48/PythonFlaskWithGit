@@ -6,8 +6,6 @@ from data.departament import Department
 def add_new_info():
     db_session.global_init("db/mars_explorer.db")
     session = db_session.create_session()
-    session.query(Jobs).delete()
-    session.commit()
     names = ["Ridley", "James", "Yuriy", "Sergey"]
     surnames = ["Scott", "Cameron", "Gagarin", "Petkin"]
     ages = [21, 42, 27, 67]
@@ -38,7 +36,8 @@ def add_new_info():
         jb.work_size = work_sizes[j]
         jb.collaborators = collabs[j]
         jb.is_finished = finished[j]
-        session.add(jb)
+        if jb.job not in [j.job for j in session.query(Jobs).all()]:
+            session.add(jb)
     titles = ["dep1", "dep2"]
     collabs = ["2, 3", "1"]
     chiefs = [2, 1]

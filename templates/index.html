@@ -2,6 +2,9 @@
 
 {% block content %}
 <h1 style="padding-left: 30%;">Works log</h1>
+{% if current_user.is_authenticated %}
+    <a href="jobs" class="btn btn-secondary">Добавить задачу</a>
+{% endif %}
 {% for item in news%}
     <div>
         <h2>Action #{{news.index(item) + 1}}</h2>
