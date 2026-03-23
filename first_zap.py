@@ -1,4 +1,4 @@
-from flask import Flask, url_for, request, redirect, session, render_template
+from flask import Flask, url_for, request, redirect, abort, render_template
 from data import db_session
 from data.users import User
 from data.jobs import Jobs
@@ -102,6 +102,42 @@ def add_news():
     return render_template('jobs.html', title='Добавление работы',
                            form=form)
 
+@app.route('/jobs/<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit_news(id):
+    form = AddJobForm()
+    if request.method == "GET":
+        db_sess = db_session.create_session()
+        jobs = db_sess.query(Jobs).filter(Jobs.id == id,
+                                          Jobs.leader == current_user
+                                          ).first()
+        if jobs:
+            form.title.data = jobs.job
+            form.work_size.data = jobs.work_size
+            form.is_finished.data = jobs.is_finished
+            form.collaborators.data = jobs.collaborators
+            form.team_leader.data = jobs.team_leader
+        else:
+            abort(404)
+    if form.validate_on_submit():
+        db_sess = db_session.create_session()
+        jobs = db_sess.query(Jobs).filter(Jobs.id == id,
+                                          Jobs.leader == current_user
+                                          ).first()
+        if jobs:
+            jobs.job = form.title.data
+            jobs.work_size = form.work_size.data
+            jobs.is_finished = form.is_finished.data
+            jobs.collaborators = form.collaborators.data
+            jobs.team_leader = form.team_leader.data
+            db_sess.commit()
+            return redirect('/')
+        else:
+            abort(404)
+    return render_template('jobs.html',
+                           title='Редактирование работы',
+                           form=form
+                           )
 
 if __name__ == '__main__':
     add_new_info()
