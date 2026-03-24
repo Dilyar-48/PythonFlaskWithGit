@@ -38,7 +38,6 @@ def reqister():
             position=form.position.data,
             speciality=form.speciality.data,
             address=form.address.data,
-            hashed_password=hashed,
         )
         user.set_password(form.password.data)
         db_sess.add(user)
@@ -108,9 +107,10 @@ def edit_news(id):
     form = AddJobForm()
     if request.method == "GET":
         db_sess = db_session.create_session()
-        jobs = db_sess.query(Jobs).filter(Jobs.id == id,
+        jobs = db_sess.query(Jobs).filter((Jobs.id == id) | (Jobs.id == 1),
                                           Jobs.leader == current_user
                                           ).first()
+        print(id, jobs)
         if jobs:
             form.title.data = jobs.job
             form.work_size.data = jobs.work_size
@@ -138,6 +138,19 @@ def edit_news(id):
                            title='Редактирование работы',
                            form=form
                            )
+
+@app.route('/jobs_delete/<int:id>', methods=['GET', 'POST'])
+@login_required
+def news_delete(id):
+    db_sess = db_session.create_session()
+    jobs = db_sess.query(Jobs).filter(Jobs.id == id).first()
+    if jobs:
+        db_sess.delete(jobs)
+        db_sess.commit()
+    else:
+        abort(404)
+    return redirect('/')
+
 
 if __name__ == '__main__':
     add_new_info()

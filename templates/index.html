@@ -3,41 +3,41 @@
 {% block content %}
 <h1 style="padding-left: 30%;">Works log</h1>
 {% if current_user.is_authenticated %}
-    <a href="jobs" class="btn btn-secondary">Добавить задачу</a>
+<a href="jobs" class="btn btn-secondary">Добавить задачу</a>
 {% endif %}
 {% for item in news%}
-    <div>
-        <h2>Action #{{news.index(item) + 1}}</h2>
-        <table style="border: 1px solid black; width: 70%; text-align: center; background-color: Gainsboro;">
-            <tr>
-                <td width="50">Название работы</td>
-                <td width="50">Фамилия и имя ответственного</td>
-                <td width="50">Продолжительность в часах</td>
-                <td width="50">Список id команды</td>
-                <td width="50">Завершена или нет</td>
-            </tr>
-            <tr style="background-color: lightblue;">
-                <td  width="35%">{{item.job}}</td>
-                <td  width="30%">{{item.leader.surname}} {{item.leader.name}}</td>
-                <td width="10%">{{item.work_size}}</td>
-                <td  width="10%">{{item.collaborators}}</td>
-                {% if item.is_finished %}
-                    <td width="15%">Работа выполнена!</td>
-                {% else %}
-                    <td width="15%">Работа не выполнена</td>
-                {% endif %}
-            </tr>
-        </table>
-    </div>
-    {% if current_user.is_authenticated and (current_user == item.leader or current_user.id == 1) %}
-        <div>
-            <a href="/jobs/{{ item.id }}" class="btn btn-warning">
-                Изменить
-            </a>
-<!--            <a href="/jobs_delete/{{ item.id }}" class="btn btn-danger">-->
-<!--                Удалить-->
-<!--            </a>-->
-        </div>
-    {% endif %}
+<div>
+    <h2>Action #{{news.index(item) + 1}}</h2>
+    <table style="border: 1px solid black; width: 70%; text-align: center; background-color: Gainsboro;">
+        <tr>
+            <td width="50">Название работы</td>
+            <td width="50">Фамилия и имя ответственного</td>
+            <td width="50">Продолжительность в часах</td>
+            <td width="50">Список id команды</td>
+            <td width="50">Завершена или нет</td>
+        </tr>
+        <tr style="background-color: lightblue;">
+            <td width="35%">{{item.job}}</td>
+            <td width="30%">{{item.leader.surname}} {{item.leader.name}}</td>
+            <td width="10%">{{item.work_size}}</td>
+            <td width="10%">{{item.collaborators}}</td>
+            {% if item.is_finished %}
+            <td width="15%">Работа выполнена!</td>
+            {% else %}
+            <td width="15%">Работа не выполнена</td>
+            {% endif %}
+        </tr>
+    </table>
+</div>
+{% if current_user.is_authenticated and (current_user == item.leader or current_user.id == 1) %}
+<div>
+    <a href="/jobs/{{ item.id }}" class="btn btn-warning">
+        Изменить
+    </a>
+    <a href="/jobs_delete/{{ item.id }}" class="btn btn-danger">
+        Удалить
+    </a>
+</div>
+{% endif %}
 {% endfor %}
 {% endblock %}

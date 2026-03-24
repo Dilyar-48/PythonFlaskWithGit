@@ -12,6 +12,7 @@ def add_new_info():
     positions = ["captain", "colonist", "colonist", "colonist"]
     specialites = ["research engineer", "pilot", "pilot", "research engineer"]
     emails = ["scott_chief@mars.org", "jamesCameron@mars.org", "GagarinYura@mars.org", "SergPet@mars.org"]
+    passwords = ["aaa", "bbb", "ccc", "ddd"]
     emails_was = [us.email for us in session.query(User).all()]
     for us in range(len(names)):
         if emails[us] not in emails_was:
@@ -23,6 +24,7 @@ def add_new_info():
             user.speciality = specialites[us]
             user.address = f"module{us + 1}"
             user.email = emails[us]
+            user.set_password(passwords[us])
             session.add(user)
     leaders = [1, 2, 3]
     jobs = ["deployment of residential modules 1 and 2", "Patch up the crack in the ship", "Get enough sleep"]
