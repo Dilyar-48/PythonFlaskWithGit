@@ -9,4 +9,5 @@ class AddJobForm(FlaskForm):
     is_finished = BooleanField("Завершена")
     collaborators = StringField("Список id команды")
     team_leader = IntegerField("Id руководителя")
+    category_id = IntegerField("Id категории")
     submit = SubmitField('Применить')

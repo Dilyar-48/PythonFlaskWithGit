@@ -20,4 +20,8 @@ class Jobs(SqlAlchemyBase):
     team_leader = sqlalchemy.Column(sqlalchemy.Integer,
                                 sqlalchemy.ForeignKey("users.id"))
     leader = sqlalchemy.orm.relationship('User', foreign_keys=team_leader)
+    category_id = sqlalchemy.Column(sqlalchemy.Integer,
+                                    sqlalchemy.ForeignKey("category.id"))
+    category = sqlalchemy.orm.relationship('Categories', foreign_keys=category_id)
+
 

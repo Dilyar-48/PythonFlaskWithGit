@@ -102,6 +102,7 @@ def add_jobs():
         jobs.is_finished = form.is_finished.data
         jobs.collaborators = form.collaborators.data
         jobs.team_leader = form.team_leader.data
+        jobs.category_id = form.category_id.data
         user = db_sess.query(User).filter(User.id == jobs.team_leader).first()
         user.jobs.append(jobs)
         db_sess.merge(user)
@@ -124,6 +125,7 @@ def edit_jobs(id):
             form.is_finished.data = jobs.is_finished
             form.collaborators.data = jobs.collaborators
             form.team_leader.data = jobs.team_leader
+            form.category_id.data = jobs.category_id
         else:
             abort(404)
     if form.validate_on_submit():
@@ -135,6 +137,7 @@ def edit_jobs(id):
             jobs.is_finished = form.is_finished.data
             jobs.collaborators = form.collaborators.data
             jobs.team_leader = form.team_leader.data
+            jobs.category_id = form.category_id.data
             db_sess.commit()
             return redirect('/')
         else:
@@ -157,6 +160,7 @@ def jobs_delete(id):
         abort(404)
     return redirect('/')
 
+
 @app.route('/departaments', methods=['GET', 'POST'])
 @login_required
 def add_deps():
@@ -175,6 +179,7 @@ def add_deps():
         return redirect('/deps')
     return render_template('add_dep.html', title='Добавление департамента',
                            form=form)
+
 
 @app.route('/departaments/<int:id>', methods=['GET', 'POST'])
 @login_required
@@ -207,9 +212,10 @@ def edit_deps(id):
                            form=form
                            )
 
+
 @app.route('/departaments_delete/<int:id>', methods=['GET', 'POST'])
 @login_required
-def news_delete(id):
+def departament_delete(id):
     db_sess = db_session.create_session()
     deps = db_sess.query(Department).filter(Department.id == id).first()
     if deps:
