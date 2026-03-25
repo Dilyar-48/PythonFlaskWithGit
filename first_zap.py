@@ -1,5 +1,6 @@
 from flask import Flask, url_for, request, redirect, abort, render_template
 from data import db_session
+from data.departament import Department
 from data.users import User
 from data.jobs import Jobs
 from forms.user import RegisterForm
@@ -8,6 +9,7 @@ from flask_login import LoginManager, login_user, login_required, logout_user
 from forms.autorize_form import LoginForm
 from forms.add_task_form import AddJobForm
 from flask_login import current_user
+from forms.add_deps_form import AddDepForm
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
@@ -49,8 +51,15 @@ def reqister():
 @app.route("/")
 def index():
     db_sess = db_session.create_session()
-    news = db_sess.query(Jobs).all()
-    return render_template("index.html", news=news)
+    jobs = db_sess.query(Jobs).all()
+    return render_template("index.html", jobs=jobs)
+
+
+@app.route("/deps")
+def deps():
+    db_sess = db_session.create_session()
+    deps = db_sess.query(Department).all()
+    return render_template("deps.html", deps=deps)
 
 
 @login_manager.user_loader
@@ -83,7 +92,7 @@ def logout():
 
 @app.route('/jobs', methods=['GET', 'POST'])
 @login_required
-def add_news():
+def add_jobs():
     form = AddJobForm()
     if form.validate_on_submit():
         db_sess = db_session.create_session()
@@ -101,16 +110,14 @@ def add_news():
     return render_template('jobs.html', title='Добавление работы',
                            form=form)
 
+
 @app.route('/jobs/<int:id>', methods=['GET', 'POST'])
 @login_required
-def edit_news(id):
+def edit_jobs(id):
     form = AddJobForm()
     if request.method == "GET":
         db_sess = db_session.create_session()
-        jobs = db_sess.query(Jobs).filter((Jobs.id == id) | (Jobs.id == 1),
-                                          Jobs.leader == current_user
-                                          ).first()
-        print(id, jobs)
+        jobs = db_sess.query(Jobs).filter(Jobs.id == id).first()
         if jobs:
             form.title.data = jobs.job
             form.work_size.data = jobs.work_size
@@ -121,9 +128,7 @@ def edit_news(id):
             abort(404)
     if form.validate_on_submit():
         db_sess = db_session.create_session()
-        jobs = db_sess.query(Jobs).filter(Jobs.id == id,
-                                          Jobs.leader == current_user
-                                          ).first()
+        jobs = db_sess.query(Jobs).filter(Jobs.id == id).first()
         if jobs:
             jobs.job = form.title.data
             jobs.work_size = form.work_size.data
@@ -139,9 +144,10 @@ def edit_news(id):
                            form=form
                            )
 
+
 @app.route('/jobs_delete/<int:id>', methods=['GET', 'POST'])
 @login_required
-def news_delete(id):
+def jobs_delete(id):
     db_sess = db_session.create_session()
     jobs = db_sess.query(Jobs).filter(Jobs.id == id).first()
     if jobs:
@@ -150,6 +156,68 @@ def news_delete(id):
     else:
         abort(404)
     return redirect('/')
+
+@app.route('/departaments', methods=['GET', 'POST'])
+@login_required
+def add_deps():
+    form = AddDepForm()
+    if form.validate_on_submit():
+        db_sess = db_session.create_session()
+        deps = Department()
+        deps.title = form.title.data
+        deps.members = form.members.data
+        deps.email = form.email.data
+        deps.chief = form.chief.data
+        user = db_sess.query(User).filter(User.id == deps.chief).first()
+        user.deps.append(deps)
+        db_sess.merge(user)
+        db_sess.commit()
+        return redirect('/deps')
+    return render_template('add_dep.html', title='Добавление департамента',
+                           form=form)
+
+@app.route('/departaments/<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit_deps(id):
+    form = AddDepForm()
+    if request.method == "GET":
+        db_sess = db_session.create_session()
+        deps = db_sess.query(Department).filter(Department.id == id).first()
+        if deps:
+            form.title.data = deps.title
+            form.members.data = deps.members
+            form.email.data = deps.email
+            form.chief.data = deps.chief
+        else:
+            abort(404)
+    if form.validate_on_submit():
+        db_sess = db_session.create_session()
+        deps = db_sess.query(Department).filter(Department.id == id).first()
+        if deps:
+            deps.title = form.title.data
+            deps.members = form.members.data
+            deps.email = form.email.data
+            deps.chief = form.chief.data
+            db_sess.commit()
+            return redirect('/deps')
+        else:
+            abort(404)
+    return render_template('add_dep.html',
+                           title='Редактирование департамента',
+                           form=form
+                           )
+
+@app.route('/departaments_delete/<int:id>', methods=['GET', 'POST'])
+@login_required
+def news_delete(id):
+    db_sess = db_session.create_session()
+    deps = db_sess.query(Department).filter(Department.id == id).first()
+    if deps:
+        db_sess.delete(deps)
+        db_sess.commit()
+    else:
+        abort(404)
+    return redirect('/deps')
 
 
 if __name__ == '__main__':

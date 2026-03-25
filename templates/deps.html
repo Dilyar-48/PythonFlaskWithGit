@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 style="text-align: center;">List of Departaments</h1>
+{% if current_user.is_authenticated %}
+<a href="departaments" class="btn btn-secondary">Добавить департамент</a>
+<a href="/" class="btn btn-secondary">Задачи</a>
+{% endif %}
+{% for item in deps%}
+    <div>
+        <h2>Departament #{{deps.index(item) + 1}}</h2>
+        <table style="border: 1px solid black; width: 100%; text-align: center; background-color: Gainsboro; margin: auto;">
+            <tr>
+                <td width="40%">Название департамента</td>
+                <td width="20%">Фамилия и имя ответственного</td>
+                <td width="20%">Участники</td>
+                <td width="20%">email департамента</td>
+            </tr>
+            <tr style="background-color: lightblue;">
+                <td>{{item.title}}</td>
+                <td>{{item.leader.surname}} {{item.leader.name}}</td>
+                <td>{{item.members}}</td>
+                <td>{{item.email}}</td>
+            </tr>
+        </table>
+    </div>
+    {% if current_user.is_authenticated and (current_user == item.leader or current_user.id == 1) %}
+    <div>
+        <a href="/departaments/{{ item.id }}" class="btn btn-warning">
+            Изменить
+        </a>
+        <a href="/departaments_delete/{{ item.id }}" class="btn btn-danger">
+            Удалить
+        </a>
+    </div>
+    {% endif %}
+{% endfor %}
+{% endblock %}
