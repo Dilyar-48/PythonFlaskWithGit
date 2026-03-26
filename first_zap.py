@@ -1,5 +1,5 @@
-from flask import Flask, url_for, request, redirect, abort, render_template
-from data import db_session
+from flask import Flask, jsonify, request, redirect, abort, render_template, make_response
+from data import db_session, jobs_api
 from data.departament import Department
 from data.users import User
 from data.jobs import Jobs
@@ -225,7 +225,16 @@ def departament_delete(id):
         abort(404)
     return redirect('/deps')
 
+@app.errorhandler(404)
+def not_found(error):
+    return make_response(jsonify({'error': 'Not found'}), 404)
+
+
+@app.errorhandler(400)
+def bad_request(_):
+    return make_response(jsonify({'error': 'Bad Request'}), 400)
 
 if __name__ == '__main__':
     add_new_info()
+    app.register_blueprint(jobs_api.blueprint)
     app.run(port=5000, host='127.0.0.1')
