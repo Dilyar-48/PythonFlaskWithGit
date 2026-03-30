@@ -1,5 +1,5 @@
 from flask import Flask, jsonify, request, redirect, abort, render_template, make_response
-from data import db_session, jobs_api, user_api
+from data import db_session, jobs_api, users_resource, user_api
 from data.departament import Department
 from data.users import User
 from data.jobs import Jobs
@@ -10,8 +10,12 @@ from forms.autorize_form import LoginForm
 from forms.add_task_form import AddJobForm
 from flask_login import current_user
 from forms.add_deps_form import AddDepForm
+from flask_restful import reqparse, abort, Api, Resource
 
 app = Flask(__name__)
+api = Api(app)
+api.add_resource(users_resource.UsersResource, '/api/v2/users/<int:user_id>')
+api.add_resource(users_resource.UsersListResource, '/api/v2/users')
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 
 login_manager = LoginManager()
@@ -226,6 +230,7 @@ def departament_delete(id):
         abort(404)
     return redirect('/deps')
 
+
 @app.errorhandler(404)
 def not_found(error):
     return make_response(jsonify({'error': 'Not found'}), 404)
@@ -234,6 +239,7 @@ def not_found(error):
 @app.errorhandler(400)
 def bad_request(_):
     return make_response(jsonify({'error': 'Bad Request'}), 400)
+
 
 if __name__ == '__main__':
     add_new_info()
