@@ -40,6 +40,7 @@ def reqister():
             position=form.position.data,
             speciality=form.speciality.data,
             address=form.address.data,
+            city_from=form.city_from.data
         )
         user.set_password(form.password.data)
         db_sess.add(user)

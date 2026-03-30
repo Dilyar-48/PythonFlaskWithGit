@@ -22,6 +22,7 @@ class User(SqlAlchemyBase, UserMixin, SerializerMixin):
     hashed_password = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     modified_date = sqlalchemy.Column(sqlalchemy.DateTime,
                                       default=datetime.datetime.now)
+    city_from = sqlalchemy.Column(sqlalchemy.String)
     jobs = sqlalchemy.orm.relationship("Jobs", back_populates='leader')
     deps = sqlalchemy.orm.relationship("Department", back_populates='leader')
 

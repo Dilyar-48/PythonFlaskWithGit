@@ -16,6 +16,7 @@ def add_new_info():
     specialites = ["research engineer", "pilot", "pilot", "research engineer"]
     emails = ["scott_chief@mars.org", "jamesCameron@mars.org", "GagarinYura@mars.org", "SergPet@mars.org"]
     passwords = ["aaa", "bbb", "ccc", "ddd"]
+    citys = ["Москва", "Санкт - Петербург", "Казань", "Чебоксары"]
     emails_was = [us.email for us in session.query(User).all()]
     for us in range(len(names)):
         if emails[us] not in emails_was:
@@ -28,6 +29,7 @@ def add_new_info():
             user.address = f"module{us + 1}"
             user.email = emails[us]
             user.set_password(passwords[us])
+            user.city_from = citys[us]
             session.add(user)
     titles = ["engineering work", "technical work", "mental work", "rest"]
     for cat in range(len(titles)):

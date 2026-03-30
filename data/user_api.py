@@ -1,5 +1,9 @@
 import flask
-from flask import jsonify, make_response, request
+from flask import jsonify, make_response, request, render_template
+from flask_login import login_required
+import requests
+import sys
+from pprint import pprint
 
 from . import db_session
 from .users import User
@@ -11,6 +15,15 @@ blueprint = flask.Blueprint(
 )
 
 
+def spn_sizes(s):
+    toponym_size_w = abs(
+        float(s["lowerCorner"].split()[0]) - float(s["upperCorner"].split()[0]))
+    toponym_size_h = abs(
+        float(s["lowerCorner"].split()[1]) - float(s["upperCorner"].split()[1]))
+    max_coord = min(toponym_size_w, toponym_size_h)
+    return str(round(max_coord, int(str(max_coord).count("0") + 1)))
+
+
 @blueprint.route('/api/users')
 def get_users():
     db_sess = db_session.create_session()
@@ -19,7 +32,8 @@ def get_users():
         {
             'users':
                 [item.to_dict(only=(
-                    'id', 'surname', 'name', 'age', 'position', 'speciality', 'address', 'email')) for item in users]
+                    'id', 'surname', 'name', 'age', 'position', 'speciality', 'address', 'email', 'city_from')) for item
+                    in users]
         }
     )
 
@@ -33,7 +47,7 @@ def get_one_user(user_id):
     return jsonify(
         {
             'user': user.to_dict(only=(
-                'id', 'surname', 'name', 'age', 'position', 'speciality', 'address', 'email'))
+                'id', 'surname', 'name', 'age', 'position', 'speciality', 'address', 'email', 'city_from'))
         }
     )
 
@@ -43,7 +57,8 @@ def create_user():
     if not request.json:
         return make_response(jsonify({'error': 'Empty request'}), 400)
     elif not all(key in request.json for key in
-                 ['surname', 'name', 'age', 'position', 'speciality', 'address', 'email', "hashed_password"]):
+                 ['surname', 'name', 'age', 'position', 'speciality', 'address', 'email', "hashed_password",
+                  "city_from"]):
         return make_response(jsonify({'error': 'Bad request'}), 400)
     db_sess = db_session.create_session()
     users = [us.email for us in db_sess.query(User).all()]
@@ -57,6 +72,7 @@ def create_user():
         speciality=request.json['speciality'],
         address=request.json['address'],
         email=request.json['email'],
+        city_from=request.json['city_from'],
         hashed_password=hash(request.json['hashed_password'])
     )
     db_sess.add(user)
@@ -78,6 +94,7 @@ def edit_user(user_id):
     if "speciality" in request.json: user.speciality = request.json["speciality"]
     if "address" in request.json: user.address = request.json["address"]
     if "hashed_password" in request.json: user.hashed_password = request.json["hashed_password"]
+    if "city_from" in request.json: user.city_from = request.json["city_from"]
     if "email" in request.json and request.json["email"] not in users_email: user.email = request.json["email"]
 
     db_sess.commit()
@@ -93,3 +110,36 @@ def delete_user(user_id):
     db_sess.delete(user)
     db_sess.commit()
     return jsonify({'success': 'OK'})
+
+
+@blueprint.route('/api/users_show/<int:user_id>', methods=['GET'])
+@login_required
+def user_show(user_id):
+    db_sess = db_session.create_session()
+    user = db_sess.get(User, user_id)
+    if not user:
+        return make_response(jsonify({'error': 'Not found'}), 404)
+    user_city = user.city_from
+    geocoder_api_server = "http://geocode-maps.yandex.ru/1.x/"
+
+    geocoder_params = {
+        "apikey": "8013b162-6b42-4997-9691-77b7074026e0",
+        "geocode": user_city,
+        "format": "json"}
+
+    response = requests.get(geocoder_api_server, params=geocoder_params)
+
+    if response:
+        json_response = response.json()
+        toponym = json_response["response"]["GeoObjectCollection"]["featureMember"][0]["GeoObject"]
+        toponym_coodrinates = ",".join(toponym["Point"]["pos"].split(" "))
+        spn = spn_sizes(toponym["boundedBy"]["Envelope"])
+        server_address = f'https://static-maps.yandex.ru/v1?ll={toponym_coodrinates}&spn={spn},{spn}&apikey=f3a0fe3a-b07e-4840-a1da-06f18b2ddf13'
+        response = requests.get(server_address)
+        if not response:
+            print("Ошибка выполнения запроса")
+            print("Http статус:", response.status_code, "(", response.reason, ")")
+            sys.exit(1)
+        with open("static/img/map.png", "wb") as file:
+            file.write(response.content)
+        return render_template("user_show.html", user=user)
