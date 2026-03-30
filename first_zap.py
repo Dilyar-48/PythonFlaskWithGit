@@ -1,5 +1,5 @@
 from flask import Flask, jsonify, request, redirect, abort, render_template, make_response
-from data import db_session, jobs_api
+from data import db_session, jobs_api, user_api
 from data.departament import Department
 from data.users import User
 from data.jobs import Jobs
@@ -237,4 +237,5 @@ def bad_request(_):
 if __name__ == '__main__':
     add_new_info()
     app.register_blueprint(jobs_api.blueprint)
+    app.register_blueprint(user_api.blueprint)
     app.run(port=5000, host='127.0.0.1')

@@ -69,16 +69,16 @@ def edit_jobs(jobs_id):
     jobs = db_sess.get(Jobs, jobs_id)
     if not jobs:
         return make_response(jsonify({'error': 'Not found'}), 404)
-    if "job" in request.json: jobs.job = request.json[request.json]["job"]
-    if "work_size" in request.json: jobs.work_size = request.json[request.json]["work_size"]
-    if "collaborators" in request.json: jobs.collaborators = request.json[request.json]["collaborators"]
-    if "speciality" in request.json: jobs.speciality = request.json[request.json]["speciality"]
-    if "is_finished" in request.json: jobs.is_finished = request.json[request.json]["is_finished"]
-    if "team_leader" in request.json: jobs.team_leader = request.json[request.json]["team_leader"]
-    if "category_id" in request.json: jobs.category_id = request.json[request.json]["category_id"]
-
+    if "job" in request.json: jobs.job = request.json["job"]
+    if "work_size" in request.json: jobs.work_size = request.json["work_size"]
+    if "collaborators" in request.json: jobs.collaborators = request.json["collaborators"]
+    if "speciality" in request.json: jobs.speciality = request.json["speciality"]
+    if "is_finished" in request.json: jobs.is_finished = request.json["is_finished"]
+    if "team_leader" in request.json: jobs.team_leader = request.json["team_leader"]
+    if "category_id" in request.json: jobs.category_id = request.json["category_id"]
     db_sess.commit()
     return jsonify({'id': jobs.id})
+
 
 @blueprint.route('/api/jobs/<int:jobs_id>', methods=['DELETE'])
 def delete_jobs(jobs_id):
