@@ -1,8 +1,9 @@
 from flask_restful import reqparse, abort, Api, Resource
-from flask import jsonify
+from flask import jsonify, request
 from data import db_session
 from data.parser import parser
 from data.users import User
+
 
 
 def abort_if_user_not_found(user_id):
@@ -18,7 +19,7 @@ class UsersResource(Resource):
         session = db_session.create_session()
         user = session.get(User, user_id)
         return jsonify({'user': user.to_dict(
-            only=('surname', 'name', 'age', 'position', 'speciality', 'address', 'email', 'city_from'))})
+            only=('id', 'surname', 'name', 'age', 'position', 'speciality', 'address', 'email', 'city_from'))})
 
     def delete(self, user_id):
         abort_if_user_not_found(user_id)
@@ -28,13 +29,31 @@ class UsersResource(Resource):
         session.commit()
         return jsonify({'success': 'OK'})
 
+    def put(self, user_id):
+        abort_if_user_not_found(user_id)
+        db_sess = db_session.create_session()
+        user = db_sess.get(User, user_id)
+        users_email = [us.email for us in db_sess.query(User).all() if us.id != user_id]
+        if "surname" in request.json: user.surname = request.json["surname"]
+        if "name" in request.json: user.name = request.json["name"]
+        if "age" in request.json: user.age = request.json["age"]
+        if "position" in request.json: user.position = request.json["position"]
+        if "speciality" in request.json: user.speciality = request.json["speciality"]
+        if "address" in request.json: user.address = request.json["address"]
+        if "hashed_password" in request.json: user.hashed_password = request.json["hashed_password"]
+        if "city_from" in request.json: user.city_from = request.json["city_from"]
+        if "email" in request.json and request.json["email"] not in users_email: user.email = request.json["email"]
+
+        db_sess.commit()
+        return jsonify({'id': user.id})
+
 
 class UsersListResource(Resource):
     def get(self):
         session = db_session.create_session()
         users = session.query(User).all()
         return jsonify({'users': [item.to_dict(
-            only=('surname', 'name', 'age', 'position', 'speciality', 'address', 'email', 'city_from')) for item in
+            only=('id', 'surname', 'name', 'age', 'position', 'speciality', 'address', 'email', 'city_from')) for item in
             users]})
 
     def post(self):
