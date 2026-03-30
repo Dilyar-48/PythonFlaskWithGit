@@ -1,5 +1,5 @@
 from flask import Flask, jsonify, request, redirect, abort, render_template, make_response
-from data import db_session, jobs_api, users_resource, user_api
+from data import db_session, jobs_api, users_resource, user_api, jobs_resource
 from data.departament import Department
 from data.users import User
 from data.jobs import Jobs
@@ -16,6 +16,8 @@ app = Flask(__name__)
 api = Api(app)
 api.add_resource(users_resource.UsersResource, '/api/v2/users/<int:user_id>')
 api.add_resource(users_resource.UsersListResource, '/api/v2/users')
+api.add_resource(jobs_resource.JobsResource, '/api/v2/jobs/<int:job_id>')
+api.add_resource(jobs_resource.JobsListResource, '/api/v2/jobs')
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 
 login_manager = LoginManager()
