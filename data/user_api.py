@@ -3,7 +3,7 @@ from flask import jsonify, make_response, request, render_template
 from flask_login import login_required
 import requests
 import sys
-from pprint import pprint
+from ymaps import Static
 
 from . import db_session
 from .users import User
@@ -112,7 +112,7 @@ def delete_user(user_id):
     return jsonify({'success': 'OK'})
 
 
-@blueprint.route('/api/users_show/<int:user_id>', methods=['GET'])
+@blueprint.route('/users_show/<int:user_id>', methods=['GET'])
 @login_required
 def user_show(user_id):
     db_sess = db_session.create_session()
@@ -132,14 +132,9 @@ def user_show(user_id):
     if response:
         json_response = response.json()
         toponym = json_response["response"]["GeoObjectCollection"]["featureMember"][0]["GeoObject"]
-        toponym_coodrinates = ",".join(toponym["Point"]["pos"].split(" "))
-        spn = spn_sizes(toponym["boundedBy"]["Envelope"])
-        server_address = f'https://static-maps.yandex.ru/v1?ll={toponym_coodrinates}&spn={spn},{spn}&apikey=f3a0fe3a-b07e-4840-a1da-06f18b2ddf13'
-        response = requests.get(server_address)
-        if not response:
-            print("Ошибка выполнения запроса")
-            print("Http статус:", response.status_code, "(", response.reason, ")")
-            sys.exit(1)
-        with open("static/img/map.png", "wb") as file:
-            file.write(response.content)
+        toponym_coodrinates = [float(n) for n in toponym["Point"]["pos"].split(" ")]
+        spn = float(spn_sizes(toponym["boundedBy"]["Envelope"]))
+        response = Static(url='1.x').get_image(ll=toponym_coodrinates, spn=[spn, spn], l=["sat"])
+        with open('./static/img/map.png', "wb") as f:
+            f.write(response)
         return render_template("user_show.html", user=user)

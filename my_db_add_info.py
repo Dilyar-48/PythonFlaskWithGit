@@ -16,7 +16,7 @@ def add_new_info():
     specialites = ["research engineer", "pilot", "pilot", "research engineer"]
     emails = ["scott_chief@mars.org", "jamesCameron@mars.org", "GagarinYura@mars.org", "SergPet@mars.org"]
     passwords = ["aaa", "bbb", "ccc", "ddd"]
-    citys = ["Москва", "Санкт - Петербург", "Казань", "Чебоксары"]
+    citys = ["Wellington", "Санкт - Петербург", "Казань", "Чебоксары"]
     emails_was = [us.email for us in session.query(User).all()]
     for us in range(len(names)):
         if emails[us] not in emails_was:
