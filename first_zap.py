@@ -247,4 +247,4 @@ if __name__ == '__main__':
     add_new_info()
     app.register_blueprint(jobs_api.blueprint)
     app.register_blueprint(user_api.blueprint)
-    app.run(port=5000, host='127.0.0.1')
+    app.run(port=5001, host='127.0.0.1')
